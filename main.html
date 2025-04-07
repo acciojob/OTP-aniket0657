@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,18 +7,15 @@
     <title>OTP Verification</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
             height: 100vh;
-            background-color: #f9f9f9;
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
         }
         .container {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
         .code-container {
@@ -31,35 +29,52 @@
             height: 50px;
             font-size: 24px;
             text-align: center;
-            border: 1px solid #ccc;
+            border: 2px solid #ddd;
             border-radius: 5px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .code:focus {
+            border-color: #007bff;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h2 id="verification_heading">Verify Your Account</h2>
-        <p id="verification_subtext">We emailed you a six-digit code. Enter the code below to confirm your email address.</p>
+        <p id="verification_subtext">Enter the 6-digit code sent to your registered mobile number.</p>
         <div class="code-container">
-            <input type="text" class="code" maxlength="1" />
-            <input type="text" class="code" maxlength="1" />
-            <input type="text" class="code" maxlength="1" />
-            <input type="text" class="code" maxlength="1" />
-            <input type="text" class="code" maxlength="1" />
-            <input type="text" class="code" maxlength="1" />
+            <input type="text" class="code" id="code-1" maxlength="1">
+            <input type="text" class="code" id="code-2" maxlength="1">
+            <input type="text" class="code" id="code-3" maxlength="1">
+            <input type="text" class="code" id="code-4" maxlength="1">
+            <input type="text" class="code" id="code-5" maxlength="1">
+            <input type="text" class="code" id="code-6" maxlength="1">
         </div>
     </div>
-
     <script>
-        const codes = document.querySelectorAll(".code");
-        codes[0].focus();
+        const inputs = document.querySelectorAll('.code');
+        
+        // Autofocus the first input on page load
+        window.onload = () => inputs[0].focus();
+        
+        inputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                if (e.target.value.length === 1 && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                }
+            });
 
-        codes.forEach((code, idx) => {
-            code.addEventListener("input", (e) => {
-                if (e.inputType === "deleteContentBackward" && idx > 0) {
-                    codes[idx - 1].focus();
-                } else if (e.target.value && idx < codes.length - 1) {
-                    codes[idx + 1].focus();
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace') {
+                    if (e.target.value === '') {
+                        if (index > 0) {
+                            inputs[index - 1].focus();
+                            inputs[index - 1].value = '';
+                        }
+                    } else {
+                        e.target.value = '';
+                    }
                 }
             });
         });
